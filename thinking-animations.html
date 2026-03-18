@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thinking Animations</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  .name-badge {
+    text-align: center;
+    margin-bottom: 10px;
+  }
+  .name-glow {
+    font-size: 2.8rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    background: linear-gradient(90deg, #a78bfa, #5865f2, #e91e8c, #a78bfa);
+    background-size: 300% 100%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: name-shift 4s linear infinite;
+    filter: drop-shadow(0 0 12px #5865f2aa);
+  }
+  @keyframes name-shift {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 300% 50%; }
+  }
+  body {
+    background: #0f0f13;
+    color: #e0e0e0;
+    font-family: 'Segoe UI', sans-serif;
+    padding: 24px 16px;
+    min-height: 100vh;
+  }
+  h1 {
+    text-align: center;
+    font-size: 1.5rem;
+    margin-bottom: 6px;
+    color: #fff;
+  }
+  .subtitle {
+    text-align: center;
+    font-size: 0.85rem;
+    color: #888;
+    margin-bottom: 28px;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 18px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .card {
+    background: #1a1a24;
+    border: 1px solid #2a2a3a;
+    border-radius: 14px;
+    padding: 24px 16px 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    transition: border-color 0.2s;
+  }
+  .card:hover { border-color: #5865f2; }
+  .label {
+    font-size: 0.78rem;
+    color: #aaa;
+    text-align: center;
+    letter-spacing: 0.03em;
+  }
+  .anim-box {
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* 1. Bouncing Dots */
+  .bounce-dots span {
+    display: inline-block;
+    width: 10px; height: 10px;
+    margin: 0 4px;
+    border-radius: 50%;
+    background: #5865f2;
+    animation: bounce 1.2s infinite ease-in-out;
+  }
+  .bounce-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .bounce-dots span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes bounce {
+    0%, 80%, 100% { transform: translateY(0); }
+    40% { transform: translateY(-14px); }
+  }
+
+  /* 2. Pulsing Dots */
+  .pulse-dots span {
+    display: inline-block;
+    width: 10px; height: 10px;
+    margin: 0 4px;
+    border-radius: 50%;
+    background: #e91e8c;
+    animation: pulse-fade 1.4s infinite ease-in-out;
+  }
+  .pulse-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .pulse-dots span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes pulse-fade {
+    0%, 100% { opacity: 0.2; transform: scale(0.8); }
+    50% { opacity: 1; transform: scale(1.2); }
+  }
+
+  /* 3. Typing Indicator */
+  .typing span {
+    display: inline-block;
+    width: 8px; height: 8px;
+    margin: 0 3px;
+    border-radius: 50%;
+    background: #25d366;
+    animation: typing 1s infinite;
+  }
+  .typing span:nth-child(2) { animation-delay: 0.15s; }
+  .typing span:nth-child(3) { animation-delay: 0.3s; }
+  @keyframes typing {
+    0%, 60%, 100% { transform: translateY(0); opacity: 0.5; }
+    30% { transform: translateY(-8px); opacity: 1; }
+  }
+
+  /* 4. Circular Spinner */
+  .spinner {
+    width: 36px; height: 36px;
+    border: 3px solid #2a2a3a;
+    border-top-color: #5865f2;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* 5. Arc Spinner */
+  .arc-spinner {
+    width: 36px; height: 36px;
+    border: 3px solid transparent;
+    border-top-color: #ff6b6b;
+    border-right-color: #ff6b6b;
+    border-radius: 50%;
+    animation: spin 1s ease-in-out infinite;
+  }
+
+  /* 6. Segmented Spinner */
+  .seg-spinner {
+    position: relative;
+    width: 36px; height: 36px;
+  }
+  .seg-spinner span {
+    position: absolute;
+    width: 100%; height: 100%;
+    border-radius: 50%;
+    border: 3px solid transparent;
+    border-top-color: #ffd700;
+    animation: spin 1.2s linear infinite;
+  }
+  .seg-spinner span:nth-child(2) {
+    width: 24px; height: 24px;
+    top: 6px; left: 6px;
+    border-top-color: #ff9800;
+    animation-duration: 0.8s;
+    animation-direction: reverse;
+  }
+
+  /* 7. Progress Bar */
+  .progress-bar {
+    width: 140px; height: 6px;
+    background: #2a2a3a;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .progress-bar::after {
+    content: '';
+    display: block;
+    height: 100%;
+    width: 40%;
+    background: linear-gradient(90deg, #5865f2, #a78bfa);
+    border-radius: 10px;
+    animation: progress 1.6s ease-in-out infinite;
+  }
+  @keyframes progress {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(400%); }
+  }
+
+  /* 8. Skeleton Loader */
+  .skeleton {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 140px;
+  }
+  .skel-line {
+    height: 8px;
+    border-radius: 6px;
+    background: linear-gradient(90deg, #2a2a3a 25%, #3a3a4a 50%, #2a2a3a 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.4s infinite;
+  }
+  .skel-line:nth-child(2) { width: 80%; }
+  .skel-line:nth-child(3) { width: 60%; }
+  @keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
+  /* 9. Wave Loader */
+  .wave span {
+    display: inline-block;
+    width: 5px;
+    margin: 0 2px;
+    background: #00bcd4;
+    border-radius: 3px;
+    animation: wave 1s ease-in-out infinite;
+  }
+  .wave span:nth-child(1) { height: 20px; animation-delay: 0s; }
+  .wave span:nth-child(2) { height: 30px; animation-delay: 0.1s; }
+  .wave span:nth-child(3) { height: 38px; animation-delay: 0.2s; }
+  .wave span:nth-child(4) { height: 30px; animation-delay: 0.3s; }
+  .wave span:nth-child(5) { height: 20px; animation-delay: 0.4s; }
+  @keyframes wave {
+    0%, 100% { transform: scaleY(0.5); opacity: 0.5; }
+    50% { transform: scaleY(1); opacity: 1; }
+  }
+
+  /* 10. Blinking Cursor */
+  .cursor {
+    width: 3px; height: 32px;
+    background: #e0e0e0;
+    border-radius: 2px;
+    animation: blink 1s step-end infinite;
+  }
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+  /* 11. Streaming Text */
+  .stream-text {
+    font-size: 0.85rem;
+    color: #a78bfa;
+    overflow: hidden;
+    white-space: nowrap;
+    border-right: 2px solid #a78bfa;
+    animation: typewriter 2.5s steps(18) infinite, blink-border 0.6s step-end infinite;
+    width: 0;
+  }
+  @keyframes typewriter {
+    0%, 10% { width: 0; }
+    60%, 80% { width: 9.5em; }
+    95%, 100% { width: 0; }
+  }
+  @keyframes blink-border {
+    0%, 100% { border-color: #a78bfa; }
+    50% { border-color: transparent; }
+  }
+
+  /* 12. Ellipsis */
+  .ellipsis {
+    font-size: 1rem;
+    color: #aaa;
+    letter-spacing: 2px;
+  }
+  .ellipsis::after {
+    content: '';
+    animation: dots 1.5s steps(4, end) infinite;
+  }
+  @keyframes dots {
+    0%   { content: ''; }
+    25%  { content: '.'; }
+    50%  { content: '..'; }
+    75%  { content: '...'; }
+    100% { content: ''; }
+  }
+
+  /* 13. Ripple */
+  .ripple {
+    position: relative;
+    width: 40px; height: 40px;
+  }
+  .ripple span {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 0; height: 0;
+    border: 2px solid #ff6b6b;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    animation: ripple-anim 1.5s ease-out infinite;
+  }
+  .ripple span:nth-child(2) { animation-delay: 0.5s; }
+  .ripple span:nth-child(3) { animation-delay: 1s; }
+  @keyframes ripple-anim {
+    0% { width: 0; height: 0; opacity: 1; }
+    100% { width: 40px; height: 40px; opacity: 0; }
+  }
+
+  /* 14. Glowing Orb */
+  .orb {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #a78bfa, #5865f2);
+    animation: glow 1.5s ease-in-out infinite;
+    box-shadow: 0 0 10px #5865f2;
+  }
+  @keyframes glow {
+    0%, 100% { box-shadow: 0 0 8px #5865f2; transform: scale(1); }
+    50% { box-shadow: 0 0 22px #a78bfa, 0 0 40px #5865f250; transform: scale(1.1); }
+  }
+
+  /* 15. Shimmer Card */
+  .shimmer-box {
+    width: 140px; height: 30px;
+    border-radius: 8px;
+    background: linear-gradient(90deg, #1a1a24 25%, #2e2e40 50%, #1a1a24 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.4s infinite;
+  }
+</style>
+</head>
+<body>
+  <div class="name-badge">
+    <span class="name-glow">Parth</span>
+  </div>
+  <h1>✨ Thinking Animations</h1>
+  <p class="subtitle">15 types of loading & thinking indicators</p>
+  <div class="grid">
+
+    <div class="card">
+      <div class="anim-box">
+        <div class="bounce-dots">
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+      <div class="label">Bouncing Dots</div>
+    </div>
+
+    <div class="card">
+      <div class="anim-box">
+        <div class="pulse-dots">
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+      <div class="label">Pulsing Dots</div>
+    </div>
+
+    <div class="card">
+      <div class="anim-box">
+        <div class="typing">
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+      <div class="label">Typing Indicator</div>
+    </div>
+
+    <div class="card">
+      <div class="anim-box">
+        <div class="spinner"></div>
+      </div>
+      <div class="label">Circular Spinner</div>
+    </div>
+
+    <div class="card">
+      <div class="anim-box">
+        <div class="arc-spinner"></div>
+      </div>
+      <div class="label">Arc Spinner</div>
+    </div>
+
+    <div class="card">
+      <div class="anim-box">
+        <div class="seg-spinner">
+          <span></span><span></span>
+        </div>
+      </div>
+      <div class="label">Segmented Spinner</div>
+    </div>
+
+    <div class="card">
+      <div class="anim-box">
+        <div class="progress-bar"></div>
+      </div>
+      <div class="label">Progress Bar</div>
+    </div>
+
+    <div class="card">
+      <div class="anim-box">
+        <div class="skeleton">
+          <div class="skel-line"></div>
+          <div class="skel-line"></div>
+          <div class="skel-line"></div>
+        </div>
+      </div>
+      <div class="label">Skeleton Loader</div>
+    </div>
+
+    <div class="card">
+      <div class="anim-box">
+        <div class="wave">
+          <span></span><span></span><span></span><span></span><span></span>
+        </div>
+      </div>
+      <div class="label">Wave Loader</div>
+    </div>
+
+    <div class="card">
+      <div class="anim-box">
+        <div class="cursor"></div>
+      </div>
+      <div class="label">Blinking Cursor</div>
+    </div>
+
+    <div class="card">
+      <div class="anim-box">
+        <div class="stream-text">Generating answer</div>
+      </div>
+      <div class="label">Streaming Text</div>
+    </div>
+
+    <div class="card">
+      <div class="anim-box">
+        <div class="ellipsis">Thinking</div>
+      </div>
+      <div class="label">Ellipsis Dots</div>
+    </div>
+
+    <div class="card">
+      <div class="anim-box">
+        <div class="ripple">
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+      <div class="label">Ripple Effect</div>
+    </div>
+
+    <div class="card">
+      <div class="anim-box">
+        <div class="orb"></div>
+      </div>
+      <div class="label">Glowing Orb</div>
+    </div>
+
+    <div class="card">
+      <div class="anim-box">
+        <div class="shimmer-box"></div>
+      </div>
+      <div class="label">Shimmer Effect</div>
+    </div>
+
+  </div>
+</body>
+</html>
